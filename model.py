@@ -102,11 +102,11 @@ class SteeringAnglePredictor:
         model.add(Convolution2D(24, 5, 5, subsample=(2, 2), activation='relu'))
         model.add(Convolution2D(36, 5, 5, subsample=(2, 2), activation='relu'))
         model.add(Convolution2D(48, 5, 5, subsample=(2, 2), activation='relu'))
-        model.add(Convolution2D(64, 3, 3, activation='relu'))
+        model.add(Convolution2D(64, 3, 3, activation='relu'))        
         model.add(Dropout(0.4))
 
         model.add(Flatten())
-        model.add(Dense(1164))
+        model.add(Dense(1164))        
         model.add(Dense(100))
         model.add(Dense(50))
         model.add(Dense(10))
@@ -117,7 +117,7 @@ class SteeringAnglePredictor:
         return model    
     
     def train(self, train_data, validation_data, batch_size=64, epochs=10):
-        samples_per_epoch = (int(len(train_data)/batch_size + 1) * batch_size)
+        samples_per_epoch = batch_size * 100 #(int(len(train_data)/batch_size) * batch_size)
         print(samples_per_epoch)
         
         self.model.fit_generator(self.generator.next_batch(train_data, batch_size),
@@ -136,6 +136,7 @@ def train_model():
     driving_log_reader = DrivingLogReader(
         base_path = '/home/bibagimon/nanodegree/data',
         data_dirs = ['track1_normal', 'track1_reverse', 'udacity']
+        #data_dirs = ['udacity']
     )   
     print("Total driving log records: {}".format(driving_log_reader.record_count))
     
@@ -149,7 +150,7 @@ def train_model():
     predictor = SteeringAnglePredictor()
     
     # Train the model
-    predictor.train(train, valid, batch_size=64, epochs=5)
+    predictor.train(train, valid, batch_size=64, epochs=10)
     predictor.save_model('model.h5')
     
 if __name__== "__main__":

@@ -2,8 +2,6 @@
 
 ## Writeup Template
 
-### You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
 ---
 
 **Behavioral Cloning Project**
@@ -38,12 +36,25 @@ My project includes the following files:
 * model.py containing the script to create and train the model
 * drive.py for driving the car in autonomous mode
 * model.h5 containing a trained convolution neural network 
-* writeup_report.md or writeup_report.pdf summarizing the results
+* report.md summarizing the results
 
 #### 2. Submission includes functional code
 Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
 ```sh
 python drive.py model.h5
+```
+
+Note: I have modified the Udacity provided drive.py. The image sent to predict steering angle is cropped and resized to adapt with the model input size.
+
+```
+# Before
+steering_angle = float(model.predict(image_array[None, :, :, :], batch_size=1))
+```
+```
+# After
+cropped = image_array[60:-10,20:-20,:]
+resized = cv2.resize(cropped,(140, 50), interpolation = cv2.INTER_AREA)        
+steering_angle = float(model.predict(resized[None, :, :, :], batch_size=1))
 ```
 
 #### 3. Submission code is usable and readable
