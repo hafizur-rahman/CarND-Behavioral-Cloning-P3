@@ -5,9 +5,8 @@ from sklearn.utils import shuffle
 
 
 class DrivingLogReader:
-    def __init__(self, base_path, data_dirs):
-        self.base_path = base_path
-        self.data_dirs = data_dirs
+    def __init__(self, driving_data):
+        self.driving_data = driving_data
         
         self.driving_log = self.read_all(self.base_path, self.data_dirs)
         self.record_count = len(self.driving_log)       
@@ -23,12 +22,10 @@ class DrivingLogReader:
                 lines.append(line)
         return lines
 
-    def read_all(self, base_path, data_dirs):
+    def read_all(self, base_path, driving_data):
         tmp = []
         
-        for track in data_dirs:
-            path = '{}/{}/driving_log.csv'.format(base_path, track)
-            
+        for path in driving_data:
             print("Reading driving log from {}".format(path))      
             tmp.append(self.read_csv_data(path))
 
@@ -117,8 +114,7 @@ class SteeringAnglePredictor:
         return model    
     
     def train(self, train_data, validation_data, batch_size=64, epochs=10):
-        samples_per_epoch = batch_size * 100 #(int(len(train_data)/batch_size) * batch_size)
-        print(samples_per_epoch)
+        samples_per_epoch = batch_size * 100      
         
         self.model.fit_generator(self.generator.next_batch(train_data, batch_size),
                         validation_data=self.generator.next_batch(validation_data, batch_size),
@@ -131,12 +127,10 @@ class SteeringAnglePredictor:
         self.model.save(file_name)
 
 
-def train_model():
+def train_model(driving_data):
     # Load driving log
     driving_log_reader = DrivingLogReader(
-        base_path = '/home/bibagimon/nanodegree/data',
-        data_dirs = ['track1_normal', 'track1_reverse', 'udacity']
-        #data_dirs = ['udacity']
+        driving_data = driving_data
     )   
     print("Total driving log records: {}".format(driving_log_reader.record_count))
     
@@ -154,4 +148,8 @@ def train_model():
     predictor.save_model('model.h5')
     
 if __name__== "__main__":
-    train_model()
+    base_path = '/home/bibagimon/nanodegree/data',
+    driving_data = ['{}/{}/driving_log.csv'.format(base_path, track) \
+                    for track in ['track1_normal', 'track1_reverse', 'udacity']]    
+    
+    train_model(driving_data)
