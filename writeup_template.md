@@ -60,9 +60,11 @@ steering_angle = float(model.predict(resized[None, :, :, :], batch_size=1))
 
 #### 3. Submission code is usable and readable
 
-The model.py file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
+The `model.py` file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
 
-The model.py can be executed as a python application and accepts two params.
+Note: `model.py` uses a python generator to avoid loading the images in memory. It greatly helped to reduce training time.
+
+The `model.py` can be executed as a python application and accepts two params.
 ```
 $ python model.py --help
 Using TensorFlow backend.
