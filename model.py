@@ -149,11 +149,18 @@ def train_model(driving_data):
     
     # Train the model
     predictor.train(train, valid, batch_size=64, epochs=10)
-    predictor.save_model('model_.h5')
+    predictor.save_model('model.h5')
     
 if __name__== "__main__":
-    base_path = '/home/bibagimon/nanodegree/data'
-    driving_data = ['{}/{}/driving_log.csv'.format(base_path, track) \
-                    for track in ['track1_normal', 'track1_reverse', 'udacity']]    
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Steering Angle Predictor')
+    parser.add_argument('--base_path', help='Driving log record base path')
+    parser.add_argument('--tracks', nargs='*', help='Track records')
+
+    args = parser.parse_args()    
+    print("Parsed arguments:\n\tBase path: {}\n\tTracks: {}\n".format(args.base_path, args.tracks))
+
+    driving_data = ['{}/{}/driving_log.csv'.format(args.base_path, track) for track in args.tracks]
     
     train_model(driving_data)

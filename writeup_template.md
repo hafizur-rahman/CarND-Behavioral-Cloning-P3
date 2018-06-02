@@ -128,7 +128,7 @@ I then recorded the vehicle on track one revese using center lane driving:
 
 Note: Track two driving log was also recorded. However, the model didn't generalize well. So this dataset is not used for the training.
 
-After the collection process, I had 12,184 number of data points.
+After the collection process, I had 12,187 number of data points.
 
 To augment the data set, I also flipped images and angles to left/right avoid biases in driving log. For example, here is an image that has then been flipped:
 
