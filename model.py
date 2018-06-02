@@ -8,7 +8,7 @@ class DrivingLogReader:
     def __init__(self, driving_data):
         self.driving_data = driving_data
         
-        self.driving_log = self.read_all(self.base_path, self.data_dirs)
+        self.driving_log = self.read_all(self.driving_data)
         self.record_count = len(self.driving_log)       
         
 
@@ -22,7 +22,7 @@ class DrivingLogReader:
                 lines.append(line)
         return lines
 
-    def read_all(self, base_path, driving_data):
+    def read_all(self, driving_data):
         tmp = []
         
         for path in driving_data:
@@ -110,8 +110,12 @@ class SteeringAnglePredictor:
         model.add(Dense(1))
 
         model.compile(loss='mse', optimizer='adam')
+        model.summary()
+        
+        # from keras.utils.visualize_util import plot  
+        # plot(model, to_file='output_images/model.png', show_shapes=True, show_layer_names=True)
 
-        return model    
+        return model
     
     def train(self, train_data, validation_data, batch_size=64, epochs=10):
         samples_per_epoch = batch_size * 100      
@@ -140,15 +144,15 @@ def train_model(driving_data):
     print("Training dataset shape: {}".format(train.shape))
     print("Validation dataset shape: {}".format(valid.shape))
 
-    # Define model (Nvidia based)
+    # Define model
     predictor = SteeringAnglePredictor()
     
     # Train the model
     predictor.train(train, valid, batch_size=64, epochs=10)
-    predictor.save_model('model.h5')
+    predictor.save_model('model_.h5')
     
 if __name__== "__main__":
-    base_path = '/home/bibagimon/nanodegree/data',
+    base_path = '/home/bibagimon/nanodegree/data'
     driving_data = ['{}/{}/driving_log.csv'.format(base_path, track) \
                     for track in ['track1_normal', 'track1_reverse', 'udacity']]    
     

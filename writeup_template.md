@@ -16,13 +16,14 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
+[image1]: ./output_images/center_2018_05_09_23_14_22_317.jpg "Center lane driving"
+[image2]: ./output_images/center_2018_05_09_23_14_22_317_flipped.jpg "Flipped"
+[image3]: ./output_images/track1_reverse_center1.jpg "Recovery Image"
+[image4]: ./output_images/track1_reverse_center2.jpg "Recovery Image"
+[image5]: ./output_images/track1_reverse_center3.jpg "Recovery Image"
 [image6]: ./examples/placeholder_small.png "Normal Image"
 [image7]: ./examples/placeholder_small.png "Flipped Image"
+[image8]: ./output_images/model.png "Keras Model"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -61,13 +62,14 @@ steering_angle = float(model.predict(resized[None, :, :, :], batch_size=1))
 
 The model.py file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
 
+
 ### Model Architecture and Training Strategy
 
 #### 1. An appropriate model architecture has been employed
 
-My model consists of a convolution neural network with 3x3 filter sizes and depths between 32 and 128 (model.py lines 96-114) 
+My model consists of a convolution neural network with 5x5 filter sizes and depths between 24 and 64 (model.py lines 96-114) 
 
-The model includes RELU layers to introduce nonlinearity (code line 20), and the data is normalized in the model using a Keras lambda layer (code line 18). 
+The data is normalized in the model using a Keras lambda layer (code line 98). The model includes RELU layers to introduce nonlinearity (code line 99~102).
 
 #### 2. Attempts to reduce overfitting in the model
 
@@ -93,27 +95,24 @@ Mainly 3 dataset is used:
 
 #### 1. Solution Design Approach
 
-The overall strategy for deriving a model architecture was to ...
+The overall strategy for deriving a model architecture was to use a well known architecture.
 
-My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
+My first step was to use a convolution neural network model similar to the LeNet architecture. I thought this model might be appropriate because original LeNet architecture is very effective in image classification problem.
 
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. 
+In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. The mean squared error on the training set and validation set was not much different. However, the vehicle was falling off the track and later it was found that `cv2.imread()` reads the image in BGR color space, but the model was trained for RGB image.
 
-To combat the overfitting, I modified the model so that ...
+After the color space mismatch was fixed, while the vehicle could drive better than before, still it was falling off. As no image augmentation and steering angle adjustment was not done, using track2 driving log didn't give better result as well.
 
-Then I ... 
-
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
-
-At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
+Then I tried to include Udacity provided data. With these improved training data, finally model became good enough for the vehicle to drive autonomously around the track 1 without leaving the road.
 
 #### 2. Final Model Architecture
 
-The final model architecture (`model.py` lines 198-110) consisted of a convolution neural network with the following layers and layer sizes ...
+The final model architecture (`model.py` lines 198-110) is as follows:
 
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
+![alt text][image8]
 
-![alt text][image1]
+The model closely follows LeNet architecture with last conv layer removed (as the input image size is smaller than the original model).
+
 
 #### 3. Creation of the Training Set & Training Process
 
@@ -129,15 +128,19 @@ I then recorded the vehicle on track one revese using center lane driving:
 
 Note: Track two driving log was also recorded. However, the model didn't generalize well. So this dataset is not used for the training.
 
-After the collection process, I had 12184 number of data points.
+After the collection process, I had 12,184 number of data points.
 
 To augment the data set, I also flipped images and angles to left/right avoid biases in driving log. For example, here is an image that has then been flipped:
 
-![alt text][image6]
-![alt text][image7]
+![alt text][image1]
+![alt text][image2]
 
 Batch generator was used to increase training data with more samples (`model.py` line #53-#84).
 
 I finally randomly shuffled the data set and put 20% of the data into a validation set.
+
+* Total driving log records: 12187
+* Training dataset records: 9749
+* Validation dataset records: 2438
 
 I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The number of epochs was 10 with batch size 64. I used an adam optimizer so that manually training the learning rate wasn't necessary.
