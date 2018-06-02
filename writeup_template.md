@@ -134,7 +134,7 @@ The final model architecture (`model.py` lines 198-110) is as follows:
 
 ![alt text][image8]
 
-The model closely follows LeNet architecture with last conv layer removed (as the input image size is smaller than the original model).
+The model closely follows NVidia architecture with last conv layer removed (as the input image size is smaller than the original model).
 
 
 #### 3. Creation of the Training Set & Training Process
