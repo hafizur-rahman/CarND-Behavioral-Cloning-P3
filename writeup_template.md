@@ -62,6 +62,27 @@ steering_angle = float(model.predict(resized[None, :, :, :], batch_size=1))
 
 The model.py file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
 
+The model.py can be executed as a python application and accepts two params.
+```
+$ python model.py --help
+Using TensorFlow backend.
+usage: model.py [-h] [--base_path BASE_PATH] [--tracks [TRACKS [TRACKS ...]]]
+
+Steering Angle Predictor
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --base_path BASE_PATH
+                        Driving log record base path
+  --tracks [TRACKS [TRACKS ...]]
+                        Track records
+
+```
+
+Sample command:
+```
+python model.py --base_path /home/bibagimon/nanodegree/data --tracks track1_normal track2_reverse udacity
+```
 
 ### Model Architecture and Training Strategy
 
