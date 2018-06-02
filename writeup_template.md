@@ -120,7 +120,7 @@ Mainly 3 dataset is used:
 
 The overall strategy for deriving a model architecture was to use a well known architecture.
 
-My first step was to use a convolution neural network model similar to the LeNet architecture. I thought this model might be appropriate because original LeNet architecture is very effective in image classification problem.
+My first step was to use a convolution neural network model similar to the NVidia architecture(https://devblogs.nvidia.com/deep-learning-self-driving-cars/). I thought this architecture might be appropriate because it is already proven to work well.
 
 In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. The mean squared error on the training set and validation set was not much different. However, the vehicle was falling off the track and later it was found that `cv2.imread()` reads the image in BGR color space, but the model was trained for RGB image.
 
@@ -158,7 +158,7 @@ To augment the data set, I also flipped images and angles to left/right avoid bi
 ![alt text][image1]
 ![alt text][image2]
 
-Batch generator was used to increase training data with more samples (`model.py` line #53-#84).
+Batch generator was used to increase training data with more samples (`model.py` line #53-#84). Note that image data read from file was cropped to strip away part of the image not very helpful for model training (`model.py` line #71).
 
 I finally randomly shuffled the data set and put 20% of the data into a validation set.
 
